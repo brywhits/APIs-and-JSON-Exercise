@@ -7,6 +7,8 @@ namespace OpenWeatherMapAPI
         static async Task Main(string[] args)
         {
             HttpClient client = new HttpClient();
+            
+            var APIKey = 
 
             var geoURL =
                 "https://api.openweathermap.org/geo/1.0/direct?q=Springfield,MA,US&limit=1&appid=d7202b4499e566bac9938ffeca077f73";
