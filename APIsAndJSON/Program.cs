@@ -1,27 +1,38 @@
 ﻿using System.Net.Http;
 using Newtonsoft.Json.Linq;
+using System.IO;
 
 namespace APIsAndJSON
 {
     public class Program
     {
-        static async Task Main(string[] args)
-        {
-            HttpClient client = new HttpClient();
+        static void Main(string[] args)
+        { 
+            string key = File.ReadAllText("appsettings.json");
+            string apiKey = JObject.Parse(key).GetValue("APIKey").ToString();
+           
+            Console.WriteLine("Please enter your zip code:");
+            string zipCode = Console.ReadLine();
+
+            double temp = OpenWeatherMapAPI.GetTemp(zipCode, apiKey);
             
+            Console.WriteLine();
+            Console.WriteLine($"It is currently {temp} degrees F in your location.");
+
+
             for (int i = 0; i < 5; i++)
             {
-                string ronResponse = await client.GetStringAsync("https://ron-swanson-quotes.herokuapp.com/v2/quotes");
-                JArray ronArray = JArray.Parse(ronResponse);
-                string ronQuote = ronArray[0].ToString();
-                
-                string kanyeResponse = await client.GetStringAsync("https://api.kanye.rest");
-                JObject kanyeObject = JObject.Parse(kanyeResponse);
-                string kanyeQuote = kanyeObject["quote"].ToString();
-                
-                Console.WriteLine("Ron: " + ronQuote);
-                Console.WriteLine("Kanye: " + kanyeQuote);
-                Console.WriteLine();
+
+                string kanyeQuote = QuoteGenerator.GetKanyeQuote();
+                string ronQuote = QuoteGenerator.GetRonQuote();
+
+                Console.WriteLine("----------------------");
+                Console.WriteLine($"Kanye: '{kanyeQuote}'");
+                Console.WriteLine("----------------------");
+
+                Console.WriteLine("----------------------");
+                Console.WriteLine($"Ron: '{ronQuote}'");
+                Console.WriteLine("----------------------");
             }
         }
     }
